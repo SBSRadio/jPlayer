@@ -342,6 +342,7 @@ package happyworm.jPlayer {
 		}
 		public function getLoadRatio():Number {
 			if((myStatus.isLoading || myStatus.isLoaded) && myStream.bytesTotal > 0) {
+				if( myStream.bytesTotal == uint.MAX_VALUE && myStream.bytesLoaded > 2048 ) return 1; //Hackfix for AAC+ streams. 2048 is just a randomly selected number.
 				return myStream.bytesLoaded / myStream.bytesTotal;
 			} else if (myStatus.isLoaded && myStream.bytesLoaded > 0) {
 				return 1;
