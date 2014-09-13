@@ -386,7 +386,9 @@ package happyworm.jPlayer {
 
 				myStatus.metaDataReady = true; // Set flag so that this event only effects jPlayer the 1st time.
 				myStatus.metaData = info;
-				myStatus.duration = info.duration * 1000; // Only available via Meta Data.
+				if(info.duration != undefined) {
+					myStatus.duration = info.duration * 1000; // Only available via Meta Data.
+				}
 				if(info.width != undefined) {
 					myVideo.width = myStatus.videoWidth = info.width;
 				}
