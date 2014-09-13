@@ -519,7 +519,8 @@ package {
 				videoWidth: data.videoWidth,
 				videoHeight: data.videoHeight,
 				volume: commonStatus.volume,
-				muted: commonStatus.muted
+				muted: commonStatus.muted,
+				raw: data.metaData
 			};
 			log("extractStatusData: sp="+myStatus.seekPercent+" cpr="+myStatus.currentPercentRelative+" cpa="+myStatus.currentPercentAbsolute+" ct="+myStatus.currentTime+" d="+myStatus.duration);
 			return myStatus;
