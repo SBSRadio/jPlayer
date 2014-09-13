@@ -381,21 +381,27 @@ package happyworm.jPlayer {
 		}
 		public function onMetaDataHandler(info:Object):void { // Used in connectStream() in myStream.client object.
 			// This event occurs when jumping to the start of static files! ie., seek(0) will cause this event to occur.
+			this.dispatchEvent(new JplayerEvent(JplayerEvent.DEBUG_MSG, myStatus, "onMetaDataHandler: " + info.duration + " | " + info.width + "x" + info.height));
+
+			//For some reason the info object cant be serialized
+			//with JSON.stringify.
+			var o:Object = {};
+			for( var k:String in info ) {
+				o[k] = info[k];
+			}
+			myStatus.metaData = o;
+
+			if(info.duration != undefined) {
+				myStatus.duration = info.duration * 1000; // Only available via Meta Data.
+			}
+			if(info.width != undefined) {
+				myVideo.width = myStatus.videoWidth = info.width;
+			}
+			if(info.height != undefined) {
+				myVideo.height = myStatus.videoHeight = info.height;
+			}
+
 			if(!myStatus.metaDataReady) {
-				this.dispatchEvent(new JplayerEvent(JplayerEvent.DEBUG_MSG, myStatus, "onMetaDataHandler: " + info.duration + " | " + info.width + "x" + info.height));
-
-				myStatus.metaDataReady = true; // Set flag so that this event only effects jPlayer the 1st time.
-				myStatus.metaData = info;
-				if(info.duration != undefined) {
-					myStatus.duration = info.duration * 1000; // Only available via Meta Data.
-				}
-				if(info.width != undefined) {
-					myVideo.width = myStatus.videoWidth = info.width;
-				}
-				if(info.height != undefined) {
-					myVideo.height = myStatus.videoHeight = info.height;
-				}
-
 				if(myStatus.playOnLoad) {
 					myStatus.playOnLoad = false; // Capture the flag
 					if(myStatus.pausePosition > 0 ) { // Important for setMedia followed by play(time).
@@ -406,10 +412,11 @@ package happyworm.jPlayer {
 				} else {
 					pause(myStatus.pausePosition); // Always send the pausePosition. Important for setMedia() followed by pause(time). Deals with not reading stream.time with setMedia() and play() immediately followed by stop() or pause(0)
 				}
-				this.dispatchEvent(new JplayerEvent(JplayerEvent.JPLAYER_LOADEDMETADATA, myStatus));
-			} else {
-				this.dispatchEvent(new JplayerEvent(JplayerEvent.DEBUG_MSG, myStatus, "onMetaDataHandler: Already read (NO EFFECT)"));
 			}
+			
+			myStatus.metaDataReady = true; // Set flag so that this event only effects jPlayer the 1st time.
+			
+			this.dispatchEvent(new JplayerEvent(JplayerEvent.JPLAYER_LOADEDMETADATA, myStatus));
 		}
 	}
 }
