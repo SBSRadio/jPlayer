@@ -1719,6 +1719,11 @@
 						this._updateInterface();
 						this._trigger(eventType);
 						break;
+					case $.jPlayer.event.loadedmetadata:
+						this._getFlashStatus(status);
+						this._updateInterface();
+						this._trigger(eventType);
+						break;
 					case $.jPlayer.event.play:
 						this._seeked();
 						this._updateButtons(true);
@@ -1788,6 +1793,8 @@
 
 			this.status.videoWidth = status.videoWidth;
 			this.status.videoHeight = status.videoHeight;
+
+			this.status.raw = status.raw;
 
 			// The Flash does not generate this information in this release
 			this.status.readyState = 4; // status.readyState;
